@@ -23,6 +23,7 @@ named_screen_path = 'db_data/screen-%s.pk'
 screen_name_and_time_created_tuple_list_path = 'db_data/screen_names_and_times_tuple_list.pk'
 secure_file_folder = 'DO_NOT_COPY'
 portfolios_path = 'DO_NOT_COPY/portfolios.%s'
+# The following creates a do not copy folder on first startup
 portfolio_startup_check = os.path.dirname(portfolios_path)
 try:
     os.stat(portfolio_startup_check)

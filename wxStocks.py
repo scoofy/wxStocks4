@@ -36,27 +36,26 @@ config.TIMER_THREAD_ON = False
 ### START ###################################################################
 def main():
     app = wx.App()
-    import lib.password_functions as password_functions
-    result = password_functions.return_password_verification()
-    if result == wx.ID_OK:
-        logging.debug('wx.ID_OK')
-        logging.debug("Correct password")
-        pass
-    elif result == wx.ID_APPLY:
-        logging.debug('wx.ID_APPLY')
-        logging.debug("New password accepted")
-        pass
-    elif result == wx.ID_CANCEL:
-        logging.debug('wx.ID_CANCEL')
-        sys.exit()
-    elif result == wx.ID_REMOVE:
-        logging.debug('wx.ID_REMOVE')
-        logging.debug("Data Deleted")
-        sys.exit()
-    else:
-        logging.debug(str(result))
-        sys.exit()
 
+    testing = True
+    if not testing:
+        # Password prompt
+        import lib.password_functions as password_functions
+        result = password_functions.return_password_verification()
+        if result in [wx.ID_OK, wx.ID_APPLY]:
+            result_index = [wx.ID_OK, wx.ID_APPLY].index(result)
+            logging.debug(['wx.ID_OK', 'wx.ID_APPLY'][result_index])
+            logging.debug(["Correct password", "New password accepted"][result_index])
+            pass
+        elif result in [wx.ID_CANCEL, wx.ID_REMOVE]:
+            result_index = [wx.ID_CANCEL, wx.ID_REMOVE].index(result)
+            logging.debug(['wx.ID_CANCEL', 'wx.ID_REMOVE'][result_index])
+            sys.exit()
+        else:
+            logging.debug("wx.ID is unknown: " + str(result))
+            sys.exit()
+
+    # Launch wxStocks
     display_size = wx.DisplaySize()
     config.DISPLAY_SIZE = display_size
     import lib.gui as gui
