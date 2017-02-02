@@ -1,10 +1,10 @@
-import config
+import config, logging
 #[osx, debian linux, windows]
 #[osx because the o is a 0, linux because the l is a 1, and windows because it deserves to be last]
 
 
 #MainFrame
-MainFrame_size = [(1020,800),( config.DISPLAY_SIZE[0]*(3./4), config.DISPLAY_SIZE[1]*(3./4) ),( config.DISPLAY_SIZE[0]*(3./4), config.DISPLAY_SIZE[1]*(3./4) )][config.OS_TYPE_INDEX]
+MainFrame_size = (config.DISPLAY_SIZE[0]*(4./5), config.DISPLAY_SIZE[1]*(4./5))
 MainFrame_SetSizeHints = MainFrame_size
 
 def main_frame_size():

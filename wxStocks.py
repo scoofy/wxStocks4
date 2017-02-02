@@ -7,7 +7,6 @@ import sys, inspect, hashlib, threading, base64
 # Stop using print!
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(filename)s %(lineno)d: %(message)s')
-logging.debug('This is a log message.')
 
 # True globals are in config
 import config
@@ -23,13 +22,6 @@ import config
 import getpass
 
 ################################################################################################
-# Load data
-config.TIMER_THREAD_ON = True
-
-config.TIMER_THREAD()
-#db.load_all_data()
-
-config.TIMER_THREAD_ON = False
 
 
 
@@ -37,8 +29,8 @@ config.TIMER_THREAD_ON = False
 def main():
     app = wx.App()
 
-    testing = True
-    if not testing:
+    debugging = False
+    if not debugging:
         # Password prompt
         import lib.password_functions as password_functions
         result = password_functions.return_password_verification()
@@ -54,6 +46,12 @@ def main():
         else:
             logging.debug("wx.ID is unknown: " + str(result))
             sys.exit()
+
+    # Load data
+    config.TIMER_THREAD_ON = True
+    config.TIMER_THREAD()
+    #db.load_all_data()
+    config.TIMER_THREAD_ON = False
 
     # Launch wxStocks
     display_size = wx.DisplaySize()

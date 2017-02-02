@@ -2,6 +2,7 @@ import wx, logging
 import pandas as pd
 import numpy as np
 import wx.grid as gridlib
+import lib.utilities as utils
 
 GRID_LINE_COLOUR = '#CCCCCC'
 EVEN_ROW_COLOUR = '#CCE6FF'
@@ -17,14 +18,7 @@ def create_df_grid(wxPanel, dataframe, autosize=False):
     wxPanel.grid_sizer.Add(wxPanel.grid, 1, wx.ALL|wx.EXPAND)
     wxPanel.sizer.Add(wxPanel.grid_sizer, 1, wx.ALL|wx.EXPAND)
     wxPanel.SetSizerAndFit(wxPanel.sizer)
-    reset_layout(wxPanel.grid)
-
-def reset_layout(widget):
-    while widget.GetParent():
-        widget = widget.GetParent()
-        widget.Layout()
-        if widget.IsTopLevel():
-            break
+    utils.reset_layout(wxPanel.grid)
 
 def create_grid(panel, data, autosize):
     table = DataTable(data)

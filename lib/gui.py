@@ -11,6 +11,8 @@ import logging
 import config
 import lib.gui_position_index as gui_position
 from pages.TestPage import TestPage
+from pages.WelcomePage import WelcomePage
+from pages.GetDataPage import GetDataPage
 
 class MainFrame(wx.Frame): # reorder tab postions here
     def __init__(self, parent=None, title="wxStocks", size = gui_position.MainFrame_size):
@@ -34,9 +36,14 @@ class MainFrame(wx.Frame): # reorder tab postions here
         self.test_page = TestPage(self.notebook)
         self.notebook.AddPage(self.test_page, self.test_page.title)
 
-        sizer.Add(self.notebook, 1, wx.EXPAND)
-        main_frame.SetSizer(sizer)
+        self.welcome_page = WelcomePage(self.notebook)
+        self.notebook.AddPage(self.welcome_page, self.welcome_page.title)
 
+        self.get_data_page = GetDataPage(self.notebook)
+        self.notebook.AddPage(self.get_data_page, self.get_data_page.title)
+
+        sizer.Add(self.notebook, 1, wx.EXPAND, 0)
+        main_frame.SetSizer(sizer)
 
 
         logging.debug("done.\n\n------------------------- wxStocks startup complete -------------------------\n")
