@@ -8,7 +8,7 @@ try:
 except:
     config.ENCRYPTION_POSSIBLE = False
 
-#import wxStocks_classes
+import classes
 #import wxStocks_utilities as utils
 wxStocks_classes = None
 utils = None
@@ -57,7 +57,6 @@ def load_all_data():
     load_SCREEN_NAME_AND_TIME_CREATED_TUPLE_LIST()
 # start up try/except clauses below
 
-# Dont think these are used any more
 def load_GLOBAL_TICKER_LIST():
     print line_number(), "Loading GLOBAL_TICKER_LIST"
     try:
@@ -72,14 +71,6 @@ def load_GLOBAL_TICKER_LIST():
     config.GLOBAL_TICKER_LIST = pickle.load(ticker_list)
     ticker_list.close()
     return config.GLOBAL_TICKER_LIST
-def save_GLOBAL_TICKER_LIST():
-    with open(ticker_path, 'wb') as output:
-        pickle.dump(config.GLOBAL_TICKER_LIST, output, pickle.HIGHEST_PROTOCOL)
-def delete_GLOBAL_TICKER_LIST():
-    config.GLOBAL_TICKER_LIST = []
-    with open(ticker_path, 'wb') as output:
-        pickle.dump(config.GLOBAL_TICKER_LIST, output, pickle.HIGHEST_PROTOCOL)
-###
 
 ### Global Stock dict functions
 def create_new_Stock_if_it_doesnt_exist(ticker):
@@ -89,7 +80,6 @@ def create_new_Stock_if_it_doesnt_exist(ticker):
     if symbol.isalpha():
         pass
     else:
-        #print line_number(), symbol
         if "." in symbol:
             pass
         if "^" in symbol:
@@ -133,9 +123,7 @@ def create_new_Stock_if_it_doesnt_exist(ticker):
         for char in symbol:
             if not char.isalpha():
                 if char != ".": #something is very broken
-                    print line_number()
-                    print "illegal ticker symbol:", symbol
-                    print "will replace with underscores"
+                    logging.debug("illegal ticker symbol: {} will replace with underscores".format(symbol))
                     index_to_replace_list.append(symbol.index(char))
         if index_to_replace_list:
             symbol = list(symbol)
@@ -146,10 +134,9 @@ def create_new_Stock_if_it_doesnt_exist(ticker):
 
     stock = config.GLOBAL_STOCK_DICT.get(symbol)
     if stock:
-        #print "%s already exists." % symbol
         return stock
     else:
-        stock = wxStocks_classes.Stock(symbol)
+        stock = classes.Stock(symbol)
         config.GLOBAL_STOCK_DICT[symbol] = stock
         return stock
 def set_Stock_attribute(Stock, attribute_name, value, data_source_suffix):
@@ -161,7 +148,7 @@ def set_Stock_attribute(Stock, attribute_name, value, data_source_suffix):
     if not attribute_name in config.GLOBAL_ATTRIBUTE_SET:
         config.GLOBAL_ATTRIBUTE_SET.add(full_attribute_name)
 def load_GLOBAL_STOCK_DICT():
-    print line_number(), "\n" # if you remove this, remove the print newline statement below
+    logging.debug("\n") # if you remove this, remove the print newline statement below
     sys.stdout.write("    Loading GLOBAL_STOCK_DICT: this may take a couple of minutes.")
     sys.stdout.flush()
     try:
@@ -170,12 +157,12 @@ def load_GLOBAL_STOCK_DICT():
         config.GLOBAL_STOCK_DICT = stock_dict
 
     except Exception, e:
-        print "If this is your first time opening wxStocks, please ignore the following exception, otherwise, your previously saved data may have been deleted."
-        print line_number(), e
+        logging.debug("If this is your first time opening wxStocks, please ignore the following exception, otherwise, your previously saved data may have been deleted.")
+        logging.debug(e)
         stock_dict = config.GLOBAL_STOCK_DICT
         with open(all_stocks_path, 'wb') as output:
             pickle.dump(stock_dict, output, pickle.HIGHEST_PROTOCOL)
-    print "\n"
+    logging.debug("\n")
     load_GLOBAL_ATTRIBUTE_SET()
 def save_GLOBAL_STOCK_DICT():
     save_thread = threading.Thread(name = "saving", target = save_GLOBAL_STOCK_DICT_worker)
